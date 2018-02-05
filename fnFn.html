@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>
+		#box1 div{
+			width: 100px;
+			height: 100px;
+			border: 1px solid black;
+			display: none;
+		}
+		#box2 div{
+			width: 100px;
+			height: 100px;
+			border: 1px solid black;
+			display: none;
+		}
+		.active{
+			background: red;
+		}
+		.yellow{
+			background: yellow;
+		}
+		.green{
+			background: green;
+		}
+		.pink{
+			background:pink
+		}
+
+		@keyframes opac{
+			0%{
+				opacity: 0;
+			}
+			100%{
+				opacity: 1;
+			}
+		}
+		.anismate{
+			animation:opac 1s linear;
+		}
+	</style>
+</head>
+<body>
+<div id="box1">
+	<input type="button" value="按钮1" class="active">
+	<input type="button" value="按钮2">
+	<input type="button" value="按钮3">
+	<div style="display:block" class="yellow">1111</div>
+	<div class="green">2222</div>
+	<div class="pink">3333</div>
+</div>
+
+<div id="box2">
+	<input type="button" value="按钮1" class="active">
+	<input type="button" value="按钮2">
+	<input type="button" value="按钮3">
+	<div style="display:block" class="yellow">1111</div>
+	<div class="green">2222</div>
+	<div class="pink">3333</div>
+</div>
+<script>
+window.onload = function (){
+	var p = new Tab();
+	p.init({
+		id:'box1',
+		autoPlay:true
+	});
+	var p2 = new Tab();
+	p2.init({
+		id: 'box2',
+		autoPlay: false,
+		opaCity:true
+	});
+	
+}
+function Tab() {
+	this.nub = 0;
+	this.arr = ['yellow','green','pink']
+	this.settings = function () {
+		autoPlay:false
+		opaCitys:false
+	}
+}
+Tab.prototype.init = function (opt) {
+	this.obj = document.getElementById(opt.id)
+	this.btn = this.obj.getElementsByTagName('input');
+	this.div = this.obj.getElementsByTagName('div');
+	var This = this;
+	change(this.settings,opt)
+	this.settings()
+	if(this.settings.autoPlay){
+		this.autoPlay();
+	}
+	for(var i=0;i<this.btn.length;i++){
+		this.btn[i].index = i;
+		this.btn[i].onclick = function () {
+			This.change(this);
+		}
+	}
+}
+
+Tab.prototype.change = function (obj) {
+	for(var j=0;j<this.btn.length;j++){
+		this.btn[j].className = '';
+		this.div[j].style.display = 'none';
+	} 
+	obj.className = 'active';
+	this.div[obj.index].style.display = 'block';
+}
+
+Tab.prototype.autoPlay = function(){
+	var This = this;
+	setInterval(function () {
+		This.nub++;
+		if(This.nub > This.btn.length-1)This.nub = 0;
+		for(var i=0;i<This.btn.length;i++){
+			This.btn[i].className = '';
+			This.div[This.nub].className = '';
+			This.div[i].style.display = 'none';
+		}
+		This.btn[This.nub].className = 'active';
+		This.div[This.nub].style.display = 'block';
+		This.div[This.nub].className = 'anismate' + ' ' + This.arr[This.nub];
+	},2000)
+}
+Tab.prototype.opaCity = {
+
+}
+
+function change(obj1,obj2) {
+	for(var attr in obj2)obj1[attr] = obj2[attr];
+}
+</script>
+</body>
+</html>
